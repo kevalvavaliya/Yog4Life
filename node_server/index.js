@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const http = require("http");
-const mongoose = require("mongoose");
+
 const morgan = require("morgan");
 const parser = require("body-parser");
 
@@ -28,6 +28,7 @@ mongoose.connect(
 		);
 	},
 );
+
 
 morgan.token("host", function (req) {
 	return req.hostname;
