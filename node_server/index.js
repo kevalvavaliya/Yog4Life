@@ -1,9 +1,9 @@
 require("dotenv").config();
 const express = require("express");
 const http = require("http");
-
 const morgan = require("morgan");
 const parser = require("body-parser");
+const authRouter = require("./Router/authRoutes");
 
 const app = express();
 
@@ -48,6 +48,8 @@ app.get("/", (req, res) => {
 		message: "Server Up and Running!!!",
 	});
 });
+
+app.use("/auth", authRouter);
 
 app.listen(process.env.PORT, () => {
 	console.log(`server up and running on port ${process.env.PORT}`);
