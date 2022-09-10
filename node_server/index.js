@@ -6,7 +6,29 @@ const morgan = require("morgan");
 const parser = require("body-parser");
 
 const app = express();
+
 const server = http.createServer(app);
+
+let node_env = process.env.NODE_ENV || "local";
+
+const mongo_url =
+	node_env === "local" ? process.env.MONGO_URL : process.env.MONGO_LIVE;
+
+mongoose.connect(
+	mongo_url,
+	{
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+	},
+	(d) => {
+		if (d) console.log(`ERROR CONNECTING TO DB ${mongo_url}`, d);
+		console.log(
+			`Connected to ${process.env.NODE_ENV} database: `,
+			`${mongo_url}`,
+		);
+	},
+);
+
 
 morgan.token("host", function (req) {
 	return req.hostname;

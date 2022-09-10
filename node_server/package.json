@@ -1,7 +1,7 @@
 {
 	"name": "yog4life",
 	"version": "1.0.0",
-	"description": "",
+	"description": "The Art Of Living.",
 	"main": "index.js",
 	"scripts": {
 		"start": "node index.js",
