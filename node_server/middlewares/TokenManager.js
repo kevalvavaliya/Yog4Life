@@ -26,6 +26,12 @@ module.exports = {
 					user_id: mongoose.Types.ObjectId(req.user.id),
 				});
 
+				if (!session || session.length === 0) {
+					return res.status(401).json({
+						message: "Session is expired please login again!",
+					});
+				}
+
 				next();
 			} catch (err) {
 				return res.status(401).json({
