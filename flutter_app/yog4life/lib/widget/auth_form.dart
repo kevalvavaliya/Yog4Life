@@ -8,7 +8,7 @@ class AuthForm extends StatefulWidget {
   final TextEditingController phonecodecontroller;
   final TextEditingController mobilenumbercontroller;
 
-  AuthForm(
+  const AuthForm(
       {required this.constraints,
       required this.mobilenumbercontroller,
       required this.phonecodecontroller,

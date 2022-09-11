@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class OTPBox extends StatelessWidget {
-  FocusScopeNode _focusScopeNode = FocusScopeNode();
+  final FocusScopeNode _focusScopeNode = FocusScopeNode();
   TextEditingController controller;
   OTPBox({required this.controller});
   @override

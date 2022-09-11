@@ -3,8 +3,6 @@ import 'package:yog4life/screens/registerscreen.dart';
 import 'package:yog4life/screens/signinscreen.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,7 +11,6 @@ class HomePage extends StatelessWidget {
           child: LayoutBuilder(
             builder: (context, constraints) => Container(
               width: double.infinity,
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: Column(
                 children: [
                   Expanded(
@@ -31,7 +28,7 @@ class HomePage extends StatelessWidget {
                           height: constraints.maxHeight * 0.05,
                         ),
                         FittedBox(
-                          child: Text('welcome to our\ncommunity',
+                          child: Text('Welcome to Yoga\nFor Life',
                               textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.headline5),
                         ),
@@ -55,13 +52,14 @@ class HomePage extends StatelessWidget {
                   ),
                   Container(
                     alignment: Alignment.bottomCenter,
-                    padding: EdgeInsets.symmetric(vertical: 35, horizontal: 50),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 35, horizontal: 50),
                     child: Container(
                       height: 50,
                       width: constraints.maxWidth * 0.8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
-                          color: Color.fromARGB(255, 248, 215, 117)),
+                          color: const Color.fromARGB(255, 248, 215, 117)),
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -75,12 +73,13 @@ class HomePage extends StatelessWidget {
                                         Navigator.of(context).pushNamed(
                                             RegisterScreen.routeName);
                                       },
-                                      child: FittedBox(child: Text('Register')),
                                       style: TextButton.styleFrom(
                                           primary: Colors.black,
                                           backgroundColor: Colors.amber,
                                           padding: const EdgeInsets.symmetric(
-                                              vertical: 0, horizontal: 30))),
+                                              vertical: 0, horizontal: 30)),
+                                      child: const FittedBox(
+                                          child: Text('Register'))),
                                 ),
                               ),
                             ),
@@ -92,11 +91,12 @@ class HomePage extends StatelessWidget {
                                       Navigator.of(context)
                                           .pushNamed(SignInScreen.routeName);
                                     },
-                                    child: FittedBox(child: Text('Sign in')),
                                     style: TextButton.styleFrom(
                                         primary: Colors.black,
                                         padding: const EdgeInsets.symmetric(
-                                            vertical: 0, horizontal: 30))),
+                                            vertical: 0, horizontal: 30)),
+                                    child: const FittedBox(
+                                        child: Text('Sign in'))),
                               ),
                             ),
                           ]),

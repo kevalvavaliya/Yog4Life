@@ -3,15 +3,24 @@ class AuthModel {
   String token = '';
   String name = '';
   String message = '';
+  String userId = '';
+  String profilePIC = '';
 
   set setMobileNo(mobileNo) {
     this.mobileNo = mobileNo;
   }
 
+  set setprofilePIC(profilePic) {
+    this.profilePIC = profilePic;
+  }
+
+  get getProfilePIC {
+    return profilePIC;
+  }
+
   get getMobileNo {
     return mobileNo;
   }
-
 
   set setToken(token) {
     this.token = token;
@@ -27,5 +36,13 @@ class AuthModel {
 
   get getname {
     return name;
+  }
+
+  set setuserid(userId) {
+    this.userId = userId;
+  }
+
+  String get getuserID {
+    return userId;
   }
 }

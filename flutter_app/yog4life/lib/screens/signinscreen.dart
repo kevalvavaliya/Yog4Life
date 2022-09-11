@@ -1,10 +1,7 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:yog4life/models/authmodel.dart';
 import 'package:yog4life/provider/authprovider.dart';
 import 'package:yog4life/screens/otpscreen.dart';
+import 'package:yog4life/screens/registerscreen.dart';
 import 'package:yog4life/util/utility.dart';
 import 'package:yog4life/widget/auth_form.dart';
 import 'package:provider/provider.dart';
@@ -115,22 +112,34 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
               SizedBox(
                 width: constraints.maxWidth * 0.8,
-                child:
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  const Text(
-                    'Dont have an account?',
-                    style: TextStyle(
-                      fontFamily: 'Rubik',
-                      fontSize: 14,
-                      color: Colors.black45,
-                    ),
-                  ),
-                  TextButton(
-                      onPressed: () {},
-                      child: const FittedBox(
-                        child: Text('Register'),
-                      )),
-                ]),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(
+                        child: FittedBox(
+                          child: Text(
+                            'Don\'t have an account?',
+                            style: TextStyle(
+                              fontFamily: 'Rubik',
+                              fontSize: 14,
+                              color: Colors.black45,
+                            ),
+                            textAlign: TextAlign.end,
+                          ),
+                        ),
+                      ),
+                      TextButton(
+                          style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                          onPressed: () {
+                            Navigator.of(context)
+                                .pushReplacementNamed(RegisterScreen.routeName);
+                          },
+                          child: const Text(
+                            'Register',
+                          )),
+                    ]),
               ),
               Container(
                 width: constraints.maxWidth * 0.8,
@@ -141,7 +150,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   child: TextButton(
                     onPressed: () => _checkphone(context),
                     style: TextButton.styleFrom(
-                      backgroundColor: Colors.amber,
+                      backgroundColor: Theme.of(context).primaryColor,
                     ),
                     child: isLoading
                         ? Container(

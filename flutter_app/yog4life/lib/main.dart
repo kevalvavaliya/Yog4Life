@@ -1,44 +1,50 @@
-
 import 'package:flutter/material.dart';
-import 'package:yog4life/models/authmodel.dart';
-import 'package:yog4life/provider/authprovider.dart';
-import 'package:yog4life/screens/homepage.dart';
-import 'package:yog4life/screens/mainhomescreen.dart';
-import 'package:yog4life/screens/otpscreen.dart';
-import 'package:yog4life/screens/registerscreen.dart';
-import 'package:yog4life/screens/signinscreen.dart';
+import 'package:yog4life/provider/feedaddprovider.dart';
+import 'package:yog4life/provider/feedprovider.dart';
+import './provider/authprovider.dart';
+import './provider/chat_provider.dart';
+import './screens/chatscreen.dart';
+import './screens/feedaddscreen.dart';
+import './screens/homepage.dart';
+import './screens/feedscreen.dart';
+import './screens/navbarscreen.dart';
+import './screens/otpscreen.dart';
+import './screens/profilescreen.dart';
+import './screens/registerscreen.dart';
+import './screens/signinscreen.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  Future<String> tryLogin() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    if (preferences.containsKey("user")) {
-      return Future<String>(() {
-        return "true";
-      });
-    }
-    return Future<String>(() {
-      return "false";
-    });
-  }
-
+  @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-        value: AuthProvider(),
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider.value(value: AuthProvider()),
+          ChangeNotifierProvider.value(value: ChatSession()),
+          ChangeNotifierProvider.value(value: FeedAddprovider()),
+          ChangeNotifierProvider.value(value: FeedProvider()),
+        ],
         child: Consumer<AuthProvider>(
           builder: (context, auth, child) => MaterialApp(
             theme: ThemeData(
+                primarySwatch: Colors.amber,
                 fontFamily: 'Rubik',
                 textTheme: ThemeData.light().textTheme.copyWith(
-                    headline5: const TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Rubik'))),
+                      headline5: const TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Rubik'),
+                      bodyText1: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.normal,
+                        fontFamily: 'Rubik',
+                        color: Colors.black,
+                      ),
+                    )),
             home: FutureBuilder(
               future: auth.tryLogin(),
               builder: (context, snapshot) {
@@ -48,7 +54,7 @@ class MyApp extends StatelessWidget {
                 if (snapshot.data == false) {
                   return HomePage();
                 } else {
-                  return MainHomeScreen();
+                  return NavbarScreen();
                 }
               },
             ),
@@ -56,7 +62,11 @@ class MyApp extends StatelessWidget {
               SignInScreen.routeName: (context) => SignInScreen(),
               RegisterScreen.routeName: (context) => RegisterScreen(),
               OTPscreen.routeName: (context) => OTPscreen(),
-              MainHomeScreen.routeName: (context) => MainHomeScreen()
+              FeedScreen.routeName: (context) => FeedScreen(),
+              ChatScreen.routeName: (context) => ChatScreen(),
+              FeedAddScreen.routeName: (context) => FeedAddScreen(),
+              ProfileScreen.routeName: (context) => ProfileScreen(),
+              NavbarScreen.routeName: (context) => NavbarScreen()
             },
           ),
         ));

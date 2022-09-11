@@ -1,8 +1,6 @@
-import 'package:http/http.dart';
 import 'package:yog4life/provider/authprovider.dart';
-import 'package:yog4life/screens/mainhomescreen.dart';
+import 'package:yog4life/screens/navbarscreen.dart';
 import 'package:yog4life/util/utility.dart';
-
 import '../widget/OTPBox.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -27,13 +25,16 @@ class _OTPscreenState extends State<OTPscreen> {
     });
     String otp = otpbox1.text + otpbox2.text + otpbox3.text + otpbox4.text;
     if (otp.length == 4) {
-      Provider.of<AuthProvider>(context,listen: false).verifyOTP(otp).then((response) {
+      Provider.of<AuthProvider>(context, listen: false)
+          .verifyOTP(otp)
+          .then((response) {
         setState(() {
           isLoading = false;
         });
         print(response);
         if (response == "Success") {
-          Navigator.of(context).pushReplacementNamed(MainHomeScreen.routeName);
+          Navigator.of(context).pushNamedAndRemoveUntil(
+              NavbarScreen.routeName, (Route<dynamic> route) => false);
         } else {
           Utility.showSnackbar(context, 'Invalid otp');
         }

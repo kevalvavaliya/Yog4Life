@@ -40,6 +40,14 @@ dependencies:
   provider: ^6.0.3
   http: ^0.13.5
   shared_preferences: ^2.0.15
+  image_picker: ^0.8.4+1
+  permission_handler: ^8.1.4+2
+  persistent_bottom_nav_bar: ^4.0.2
+  socket_io_client: ^2.0.0
+  flutter_chat_ui: ^1.6.4
+  url_launcher: ^6.1.5
+  lottie: ^1.4.2
+  cached_network_image: ^3.2.2
   
   
 
@@ -68,6 +76,9 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/yogagirl.gif
+    - assets/images/215.jpg
+    - assets/lottie/yoga-loading.json
+    - assets/lottie/yogaman.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
