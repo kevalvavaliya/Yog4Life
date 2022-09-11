@@ -1,8 +1,4 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
-import 'package:yog4life/models/authmodel.dart';
 import 'package:yog4life/provider/authprovider.dart';
 import 'package:yog4life/screens/otpscreen.dart';
 import 'package:yog4life/util/utility.dart';
