@@ -4,6 +4,8 @@ const http = require("http");
 const morgan = require("morgan");
 const parser = require("body-parser");
 const authRouter = require("./Router/authRoutes");
+const userRouter = require("./Router/userRoutes");
+const feedRouter = require("./Router/feedRouter");
 
 const app = express();
 
@@ -51,6 +53,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/auth", authRouter);
+app.use("/feed", feedRouter);
+app.use("/user", userRouter);
 
 app.listen(process.env.PORT, () => {
 	console.log(`server up and running on port ${process.env.PORT}`);
