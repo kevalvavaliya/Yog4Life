@@ -25,8 +25,6 @@
 		"node-fetch": "^3.2.6",
 		"random-name": "^0.1.2",
 		"socket.io": "^4.5.1",
-		"twilio": "^3.81.0",
-		"aws-sdk": "^2.1032.0",
-		"multer": "^1.4.3"
+		"twilio": "^3.81.0"
 	}
 }

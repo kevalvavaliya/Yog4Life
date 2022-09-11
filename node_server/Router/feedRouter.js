@@ -5,14 +5,9 @@ const upload = require("../middlewares/upload");
 const feedRouter = express.Router();
 
 // create post
-feedRouter.post(
-	"/post/create",
-	upload.single("image"),
-	TokenManager.decodeToken,
-	async (req, res) => {
-		return FeedController.createPost(req, res);
-	},
-);
+feedRouter.post("/post/create", TokenManager.decodeToken, async (req, res) => {
+	return FeedController.createPost(req, res);
+});
 
 // edit post
 feedRouter.put("/post/:id", TokenManager.decodeToken, async (req, res) => {

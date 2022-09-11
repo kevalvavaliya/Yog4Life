@@ -1,88 +1,71 @@
 const mongoose = require("mongoose");
-const PostsModel = require("../models/postModel");
+const BlogsModel = require("../models/postModel");
 const UsersModel = require("../models/usersModel");
 module.exports = {
 	getAllPosts: async (req, res) => {
 		try {
-			let cat = req.query.cat;
-			let params = {};
-			if (cat) {
-				params = {
-					category_id: cat,
-				};
-			}
-			params.status = "published";
-			let blogs = await Blogs.find(params);
-
-			if (!blogs || blogs.length === 0) {
-				return res
-					.status(201)
-					.json(Service.response(1, "No Blogs Found.", []));
+			let posts = await PostsModel.find({}).populate("author", [
+				"username",
+				"profile_pic",
+			]);
+			if (!posts) {
+				return res.status(400).json({
+					message: "No Posts Found!!",
+					data: null,
+				});
 			}
 
-			return res
-				.status(200)
-				.json(Service.response(1, "Blogs Found Success.", blogs));
+			return res.status(200).json({
+				message: "Posts fetched successfully",
+				data: posts,
+			});
 		} catch (error) {
 			return res.status(500).json({
 				message: "Internal server error",
-				error: error.message,
 			});
 		}
 	},
 
 	createPost: async (req, res) => {
 		try {
-			let myFile = req.file.originalname.split(".");
-			let fileType = myFile[myFile.length - 1];
+			// collect post information from body
+			let { description, image } = req.body;
 
-			const params = {
-				Bucket: config.awsBucketName,
-				Key: `${uuidv4()}.${fileType}`,
-				Body: req.file.buffer,
-			};
-			s3.upload(params, async (error, data) => {
-				if (error)
-					return res
-						.status(500)
-						.json(
-							Service.response(0, "Something Went Wrong!", error),
-						);
-
-				let blog = new Blogs({
-					category_id: req.body.category_id,
-					image: data.Location,
-					image_alt: data.key.split(".")[0],
-					title: req.body.title,
-					author_id: req.user.user_id,
-					content: req.body.content,
-					status: req.body.status,
-					date: new Date(),
+			if (!description || !image) {
+				return res.status(400).json({
+					message: "Please fill all the fields",
 				});
-				// author_id: req.user.user_id,
+			}
 
-				let newBlog = await blog.save();
+			if (!userId) {
+				return res.status(400).json({
+					message: "User Not Found!!!",
+					data: null,
+				});
+			}
 
-				if (!newBlog || newBlog.length === 0)
-					return res
-						.status(400)
-						.json(
-							Service.response(
-								0,
-								"Something Went Wrong While Processing Your Request!",
-								null,
-							),
-						);
+			// create post
+			let post = await PostsModel({
+				description: description ? description : "",
+				image: image ? image : "",
+				author: req.user.id ? req.user.id : "",
+				date: new Date(),
+			}).save();
 
-				return res
-					.status(200)
-					.json(
-						Service.response(
-							1,
-							"Blog Published Successfully.",
-							newBlog,
-						),
-					);
+			if (!post) {
+				return res.status(400).json({
+					message: "Something Went Wrong!",
+					data: null,
+				});
+			}
+
+			post = await PostsModel.find({
+				_id: mongoose.Types.ObjectId(post._id),
+			}).populate("author", ["username", "profile_pic"]);
+
+			return res.status(200).json({
+				message: "Post created successfully",
+				data: post,
 			});
 		} catch (error) {
 			return res.status(500).json({
@@ -94,84 +77,59 @@ module.exports = {
 
 	editPost: async (req, res) => {
 		try {
-			let blog_id = req.query.id;
-			let blog = await Blogs.findOne({ _id: blog_id });
+			// collect post information from body
+			let { description, image } = req.body;
 
-			if (!blog || blog.length === 0)
-				return res
-					.status(201)
-					.json(Service.response(0, "Blog Not Found!", null));
+			// if (!title && !description) {
+			// 	return res.status(400).json({
+			// 		message: "Please fill all the fields",
+			// 	});
+			// }
 
-			if (blog.author_id.toString() !== req.user.user_id)
-				return res
-					.status(401)
-					.json(Service.response(0, "You are not Authorized!", null));
+			// find Post by id
+			let post = await PostsModel.findById(req.params.id);
 
-			if (req.file || typeof req.file !== "undefined") {
-				let myFile = req.file.originalname.split(".");
-				let fileType = myFile[myFile.length - 1];
-
-				const params = {
-					Bucket: config.awsBucketName,
-					Key: `${uuidv4()}.${fileType}`,
-					Body: req.file.buffer,
-				};
-				s3.upload(params, async (error, data) => {
-					if (error)
-						return res
-							.status(500)
-							.json(
-								Service.response(
-									0,
-									"Something Went Wrong!",
-									error,
-								),
-							);
-					Blogs.findOneAndUpdate(
-						{ _id: blog_id },
-						{
-							$set: {
-								title: req.body.title
-									? req.body.title
-									: blog.title,
-								content: req.body.content
-									? req.body.content
-									: blog.content,
-								status: req.body.status
-									? req.body.status
-									: blog.status,
-								image: data.Location,
-								image_alt: req.body.image_alt
-									? req.body.image_alt
-									: blog.image_alt,
-							},
-						},
-						{ new: true },
-						(error, response) => {
-							if (error)
-								return res
-									.status(500)
-									.json(
-										Service.response(
-											0,
-											"Something Went Wrong While Processing Your Request!",
-											error,
-										),
-									);
-
-							return res
-								.status(200)
-								.json(
-									Service.response(
-										1,
-										"Blog Updated Successfully.",
-										response,
-									),
-								);
-						},
-					);
+			if (!post) {
+				return res.status(400).json({
+					message: "Post not found",
+					data: null,
 				});
 			}
+
+			if (post.author.toString() != req.user.id) {
+				return res.status(400).json({
+					message: "You are not authorized to edit this post",
+					data: null,
+				});
+			}
+
+			// edit post
+			post = await PostsModel.findOneAndUpdate(
+				{
+					_id: req.params.id,
+				},
+				{
+					$set: {
+						description: description
+							? description
+							: post.description,
+						image: image ? image : post.image,
+					},
+				},
+				{ new: true, upsert: true },
+			);
+
+			if (!post) {
+				return res.status(400).json({
+					message: "Something Went Wrong!",
+					data: null,
+				});
+			}
+
+			return res.status(200).json({
+				message: "Post updated successfully",
+				data: post,
+			});
 		} catch (error) {
 			return res.status(500).json({
 				message: "Internal server error",
@@ -179,63 +137,53 @@ module.exports = {
 			});
 		}
 	},
-
 	deletePost: async (req, res) => {
 		try {
-			Blogs.findOneAndUpdate(
-				blog_id,
-				{
-					$set: {
-						title: req.body.title ? req.body.title : blog.title,
-						status: req.body.status ? req.body.status : blog.status,
-						content: req.body.content
-							? req.body.content
-							: blog.content,
-						image_alt: blog.image_alt,
-						image: blog.image,
-					},
-				},
-				{
-					new: true,
-				},
-				(error, updatedBlog) => {
-					console.log({ updatedBlog });
-					if (error)
-						return res
-							.status(500)
-							.json(
-								Service.response(
-									0,
-									"Something Went Wrong!",
-									error,
-								),
-							);
-					if (!updatedBlog || updatedBlog.length === 0)
-						return res
-							.status(201)
-							.json(
-								Service.response(
-									0,
-									"Something Went Wrong While Processing Your Request!",
-									null,
-								),
-							);
+			let postId = req.params.id;
 
-					return res
-						.status(200)
-						.json(
-							Service.response(
-								1,
-								"Blog Updated Successfully.",
-								updatedBlog,
-							),
-						);
-				},
-			);
+			if (!postId) {
+				return res.status(400).json({
+					message: "Please Provide post id",
+					data: null,
+				});
+			}
+
+			// find Post by id
+			let post = await PostsModel.findById(req.params.id);
+
+			if (!post) {
+				return res.status(400).json({
+					message: "Post not found",
+					data: null,
+				});
+			}
+
+			if (post.author.toString() != req.user.id) {
+				return res.status(400).json({
+					message: "You are not authorized to delete this post",
+					data: null,
+				});
+			}
+
+			// delete post
+			post = await PostsModel.findOneAndDelete({
+				_id: req.params.id,
+			});
+
+			if (!post) {
+				return res.status(400).json({
+					message: "Something Went Wrong!",
+					data: null,
+				});
+			}
+
+			return res.status(200).json({
+				message: "Post deleted successfully",
+				data: post,
+			});
 		} catch (error) {
 			return res.status(500).json({
 				message: "Internal server error",
-				error: error.message,
 			});
 		}
 	},
