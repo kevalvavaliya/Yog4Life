@@ -3,8 +3,6 @@ import 'package:yog4life/screens/registerscreen.dart';
 import 'package:yog4life/screens/signinscreen.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,18 +11,18 @@ class HomePage extends StatelessWidget {
           child: LayoutBuilder(
             builder: (context, constraints) => Container(
               width: double.infinity,
-              padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+              padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
               child: Column(
                 children: [
                   Expanded(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(
+                          height: constraints.maxHeight * 0.3,
                           child: Image.asset(
-                            'assets/images/yogagirl.gif',
+                            'assets/images/pride1.png',
                             fit: BoxFit.cover,
-                            height: 420,
                           ),
                         ),
                         SizedBox(
@@ -42,7 +40,7 @@ class HomePage extends StatelessWidget {
                           padding:
                               EdgeInsets.symmetric(vertical: 2, horizontal: 40),
                           child: Text(
-                            'Yoga is not just a pose.Yoga is a process\n of balancing your life and makes you strong.\nTry it if you want to know your conscience',
+                            'Bring together your files your tools \n projects and people including a new mobile \n  and web application',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 fontSize: 14,
@@ -55,13 +53,14 @@ class HomePage extends StatelessWidget {
                   ),
                   Container(
                     alignment: Alignment.bottomCenter,
-                    padding: EdgeInsets.symmetric(vertical: 35, horizontal: 50),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 35, horizontal: 50),
                     child: Container(
                       height: 50,
                       width: constraints.maxWidth * 0.8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
-                          color: Color.fromARGB(255, 248, 215, 117)),
+                          color: const Color.fromARGB(255, 248, 215, 117)),
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -75,12 +74,13 @@ class HomePage extends StatelessWidget {
                                         Navigator.of(context).pushNamed(
                                             RegisterScreen.routeName);
                                       },
-                                      child: FittedBox(child: Text('Register')),
                                       style: TextButton.styleFrom(
                                           primary: Colors.black,
                                           backgroundColor: Colors.amber,
                                           padding: const EdgeInsets.symmetric(
-                                              vertical: 0, horizontal: 30))),
+                                              vertical: 0, horizontal: 30)),
+                                      child: const FittedBox(
+                                          child: Text('Register'))),
                                 ),
                               ),
                             ),
@@ -92,11 +92,12 @@ class HomePage extends StatelessWidget {
                                       Navigator.of(context)
                                           .pushNamed(SignInScreen.routeName);
                                     },
-                                    child: FittedBox(child: Text('Sign in')),
                                     style: TextButton.styleFrom(
                                         primary: Colors.black,
                                         padding: const EdgeInsets.symmetric(
-                                            vertical: 0, horizontal: 30))),
+                                            vertical: 0, horizontal: 30)),
+                                    child: const FittedBox(
+                                        child: Text('Sign in'))),
                               ),
                             ),
                           ]),
