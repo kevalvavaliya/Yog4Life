@@ -1,12 +1,18 @@
 const express = require("express");
 const TokenManager = require("../middlewares/TokenManager");
 const FeedController = require("../controllers/feedController");
+const upload = require("../middlewares/upload");
 const feedRouter = express.Router();
 
 // create post
-feedRouter.post("/post/create", TokenManager.decodeToken, async (req, res) => {
-	return FeedController.createPost(req, res);
-});
+feedRouter.post(
+	"/post/create",
+	upload.single("image"),
+	TokenManager.decodeToken,
+	async (req, res) => {
+		return FeedController.createPost(req, res);
+	},
+);
 
 // edit post
 feedRouter.put("/post/:id", TokenManager.decodeToken, async (req, res) => {
