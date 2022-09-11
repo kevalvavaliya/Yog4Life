@@ -1,3 +1,6 @@
+const mongoose = require("mongoose");
+const PostsModel = require("../models/postModel");
+const UsersModel = require("../models/usersModel");
 module.exports = {
 	getAllPosts: async (req, res) => {
 		try {
@@ -35,8 +38,6 @@ module.exports = {
 				});
 			}
 
-			let userId = req.user.id;
-
 			if (!userId) {
 				return res.status(400).json({
 					message: "User Not Found!!!",
@@ -48,7 +49,7 @@ module.exports = {
 			let post = await PostsModel({
 				description: description ? description : "",
 				image: image ? image : "",
-				author: userId ? userId : "",
+				author: req.user.id ? req.user.id : "",
 				date: new Date(),
 			}).save();
 
@@ -79,8 +80,22 @@ module.exports = {
 		try {
 			// collect post information from body
 			let { description, image } = req.body;
+
+			// if (!title && !description) {
+			// 	return res.status(400).json({
+			// 		message: "Please fill all the fields",
+			// 	});
+			// }
+
 			// find Post by id
 			let post = await PostsModel.findById(req.params.id);
+
+			if (!post) {
+				return res.status(400).json({
+					message: "Post not found",
+					data: null,
+				});
+			}
 
 			if (post.author.toString() != req.user.id) {
 				return res.status(400).json({
@@ -138,6 +153,13 @@ module.exports = {
 			// find Post by id
 			let post = await PostsModel.findById(req.params.id);
 
+			if (!post) {
+				return res.status(400).json({
+					message: "Post not found",
+					data: null,
+				});
+			}
+
 			if (post.author.toString() != req.user.id) {
 				return res.status(400).json({
 					message: "You are not authorized to delete this post",
@@ -149,6 +171,13 @@ module.exports = {
 			post = await PostsModel.findOneAndDelete({
 				_id: req.params.id,
 			});
+
+			if (!post) {
+				return res.status(400).json({
+					message: "Something Went Wrong!",
+					data: null,
+				});
+			}
 
 			return res.status(200).json({
 				message: "Post deleted successfully",
