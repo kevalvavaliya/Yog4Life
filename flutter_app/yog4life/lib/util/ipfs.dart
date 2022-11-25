@@ -51,7 +51,8 @@ class IpfsUtil {
     var response = await http.post(
       estuaryPinData,
       headers: {
-        'Authorization': 'Bearer ${Secretes.API_KEY}',
+        'Authorization':
+            'Bearer ${Secretes.PINATA_JWT}',
         'Content-Type': 'application/json'
       },
       body: jsonEncode({
