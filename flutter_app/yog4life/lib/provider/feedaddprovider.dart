@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import '../util/ipfs.dart';
-
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:permission_handler/permission_handler.dart';
@@ -109,8 +107,9 @@ class FeedAddprovider with ChangeNotifier {
   }
 
   Future<String> addPost(String text, File image) async {
+
     final imageData = await IpfsUtil.uplodeImageToIPFS(image);
-    if (imageData.getStatusCode == 202) {
+    if (imageData.getStatusCode == 200) {
       final resp = await http.post(Uri.parse('${Utility.URL}/feed/post/create'),
           headers: {
             "Authorization": "Bearer ${AuthProvider.authUser.gettoken}",
@@ -120,7 +119,7 @@ class FeedAddprovider with ChangeNotifier {
             "description": text,
             "image": imageData.getCid,
           }));
-      print("Node api called" + resp.body);
+      // print("Node api called" + resp.body);
 
       if (resp.statusCode == 200) {
         final data = jsonDecode(resp.body);

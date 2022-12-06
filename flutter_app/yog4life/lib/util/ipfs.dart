@@ -21,8 +21,9 @@ class IpfsModel {
 class IpfsUtil {
   static Future<IpfsModel> uplodeImageToIPFS(File image) async {
     // upload image to estuary filecoin
+
     var estuaryUplodeData =
-        Uri.parse("https://shuttle-4.estuary.tech/content/add");
+        Uri.parse("https://upload.estuary.tech/content/add");
 
     var multipart_request = http.MultipartRequest('POST', estuaryUplodeData);
 
@@ -34,8 +35,8 @@ class IpfsUtil {
     });
     var response =
         await http.Response.fromStream(await multipart_request.send());
-    print('img sent ipfs api called'+response.statusCode.toString());
-    // print(response.body);
+    print('img sent ipfs api called'+response.statusCode.toString()+response.body.toString());
+
     var data = jsonDecode(response.body);
 
     //pinning data to ipfs
@@ -46,7 +47,7 @@ class IpfsUtil {
   }
 
   static Future<IpfsModel> _addPin(String cid, String origin) async {
-    var estuaryPinData = Uri.parse("https://api.estuary.tech/pinning/pins");
+    var estuaryPinData = Uri.parse("https://api.pinata.cloud/pinning/pinByHash");
 
     var response = await http.post(
       estuaryPinData,
@@ -56,19 +57,15 @@ class IpfsUtil {
         'Content-Type': 'application/json'
       },
       body: jsonEncode({
-        "name": "feed_${cid}_.png",
-        "cid": cid,
-        "origins": [origin],
+        "hashToPin": cid,
       }),
     );
-    print("add pin api called" + response.statusCode.toString());
-    // print('sts ' + response.statusCode.toString());
-    // print('resp \n' + response.body);
+   
 
     var data = jsonDecode(response.body);
-    if (response.statusCode == 202) {
+    if (response.statusCode == 200) {
       IpfsModel ipfsModel = IpfsModel(
-          cid: data['pin']['cid'],
+          cid: data['ipfsHash'],
           statusCode: response.statusCode,
           status: data['status']);
       return ipfsModel;

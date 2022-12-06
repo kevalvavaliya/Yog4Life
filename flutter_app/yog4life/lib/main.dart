@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
                         fontFamily: 'Rubik',
                         color: Colors.black,
                       ),
-                    )),
+                    )), 
             home: FutureBuilder(
               future: auth.tryLogin(),
               builder: (context, snapshot) {
