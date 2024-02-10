@@ -49,7 +49,9 @@ class FeedScreen extends StatelessWidget {
       ),
       body: FutureBuilder(
         future: Provider.of<FeedProvider>(context, listen: false).fetchFeeds(),
+        
         builder: ((context, snapshot) {
+          print("aaa");
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.data == "fail") {
               return Center(
@@ -75,6 +77,7 @@ class FeedScreen extends StatelessWidget {
             return RefreshIndicator(
               onRefresh: () => Provider.of<FeedProvider>(context, listen: false)
                   .fetchFeeds(),
+                
               child: SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 20),

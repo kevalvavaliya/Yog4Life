@@ -24,7 +24,6 @@ class _AuthFormState extends State<AuthForm> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        
         Padding(
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
             child: TextField(

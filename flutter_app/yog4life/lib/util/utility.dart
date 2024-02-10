@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Utility {
-  static const String URL = 'https://kevalPrideServer.kevalvavaliya.repl.co';
+  static const String URL = 'https://yog4life-server.onrender.com';
 
   static showSnackbar(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(

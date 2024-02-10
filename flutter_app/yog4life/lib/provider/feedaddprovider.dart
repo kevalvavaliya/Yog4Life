@@ -31,11 +31,16 @@ class FeedAddprovider with ChangeNotifier {
   }
 
   Future<bool> requestPermission() async {
-    final status = await Permission.storage.request();
-    if (status == PermissionStatus.granted) {
+    final status = await Permission.mediaLibrary.request();
+    print(status);
+    final status2 = await Permission.manageExternalStorage.request();
+    print(status2);
+    if (status == PermissionStatus.granted &&
+        status2 == PermissionStatus.granted) {
       // files.sublist(1, 8);
       return true;
     } else if (status == PermissionStatus.denied) {
+      await Permission.manageExternalStorage.request();
       return false;
     } else if (status == PermissionStatus.permanentlyDenied) {
       await openAppSettings();
@@ -107,7 +112,6 @@ class FeedAddprovider with ChangeNotifier {
   }
 
   Future<String> addPost(String text, File image) async {
-
     final imageData = await IpfsUtil.uplodeImageToIPFS(image);
     if (imageData.getStatusCode == 200) {
       final resp = await http.post(Uri.parse('${Utility.URL}/feed/post/create'),

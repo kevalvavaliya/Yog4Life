@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
           builder: (context, auth, child) => MaterialApp(
             theme: ThemeData(
                 primarySwatch: Colors.amber,
+                useMaterial3: false,
                 fontFamily: 'Rubik',
                 textTheme: ThemeData.light().textTheme.copyWith(
                       headline5: const TextStyle(
@@ -44,7 +45,7 @@ class MyApp extends StatelessWidget {
                         fontFamily: 'Rubik',
                         color: Colors.black,
                       ),
-                    )), 
+                    )),
             home: FutureBuilder(
               future: auth.tryLogin(),
               builder: (context, snapshot) {

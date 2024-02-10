@@ -22,45 +22,73 @@ class IpfsUtil {
   static Future<IpfsModel> uplodeImageToIPFS(File image) async {
     // upload image to estuary filecoin
 
+    // var estuaryUplodeData = Uri.parse("http://api.estuary.tech/content/add");
+
+    // var multipart_request = http.MultipartRequest('POST', estuaryUplodeData);
+
+    // multipart_request.files
+    //     .add(await http.MultipartFile.fromPath('data', image.path));
+    // multipart_request.headers.addAll({
+    //   'Authorization': 'Bearer ${Secretes.API_KEY}',
+    //   'Content-Type': 'multipart/form-data',
+    // });
+
+    //pinata
     var estuaryUplodeData =
-        Uri.parse("https://upload.estuary.tech/content/add");
+        Uri.parse("https://api.pinata.cloud/pinning/pinFileToIPFS");
 
     var multipart_request = http.MultipartRequest('POST', estuaryUplodeData);
 
     multipart_request.files
-        .add(await http.MultipartFile.fromPath('data', image.path));
+        .add(await http.MultipartFile.fromPath('file', image.path));
     multipart_request.headers.addAll({
-      'Authorization': 'Bearer ${Secretes.API_KEY}',
-      'Content-Type': 'multipart/form-data',
+      'authorization': 'Bearer ${Secretes.PINATA_JWT}',
+      "content-type": "multipart/form-data",
+      "accept": "application/json",
     });
     var response =
         await http.Response.fromStream(await multipart_request.send());
-    print('img sent ipfs api called'+response.statusCode.toString()+response.body.toString());
 
-    var data = jsonDecode(response.body);
+    print('img sent ipfs api called' +
+        response.statusCode.toString() +
+        response.body.toString());
+
+    // var data = jsonDecode(response.body);
 
     //pinning data to ipfs
-    var finalResponse =
-        await _addPin(data['cid'], data['providers'][0].toString());
+    // var finalResponse =
+    //     await _addPin(data['cid'], data['providers'][0].toString());
 
-    return finalResponse;
+    var data = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      IpfsModel ipfsModel = IpfsModel(
+          cid: data['IpfsHash'],
+          statusCode: response.statusCode,
+          status: data['PinSize'].toString());
+      return ipfsModel;
+    } else {
+      IpfsModel ipfsModel = IpfsModel(
+          cid: null,
+          statusCode: response.statusCode,
+          status: data['error']['reason']);
+      return ipfsModel;
+    }
   }
 
   static Future<IpfsModel> _addPin(String cid, String origin) async {
-    var estuaryPinData = Uri.parse("https://api.pinata.cloud/pinning/pinByHash");
+    var estuaryPinData =
+        Uri.parse("https://api.pinata.cloud/pinning/pinByHash");
 
     var response = await http.post(
       estuaryPinData,
       headers: {
-        'Authorization':
-            'Bearer ${Secretes.PINATA_JWT}',
+        'Authorization': 'Bearer ${Secretes.PINATA_JWT}',
         'Content-Type': 'application/json'
       },
       body: jsonEncode({
         "hashToPin": cid,
       }),
     );
-   
 
     var data = jsonDecode(response.body);
     if (response.statusCode == 200) {

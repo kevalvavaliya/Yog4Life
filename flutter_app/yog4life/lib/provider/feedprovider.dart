@@ -10,6 +10,7 @@ class FeedProvider with ChangeNotifier {
   List<FeedModel> posts = [];
 
   Future<String?> fetchFeeds() async {
+    print("Fetch");
     final resp =
         await http.post(Uri.parse("${Utility.URL}/feed/posts"), headers: {
       "Authorization": "Bearer ${AuthProvider.authUser.gettoken}",
